@@ -1,6 +1,6 @@
-from const import ACCESS_TOKEN
-from const import CLIENT_ID
-from const import CLIENT_SECRET
+from client import ACCESS_TOKEN
+from client import CLIENT_ID
+from client import CLIENT_SECRET
 from nylas import APIClient
 
 if __name__ == '__main__':
@@ -11,5 +11,5 @@ if __name__ == '__main__':
         access_token=ACCESS_TOKEN
     )
 
-    message = nylas.messages.first()
-    print(message.subject)
+    response = nylas.calendars.all()
+    print(response)
