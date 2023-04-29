@@ -11,5 +11,5 @@ if __name__ == '__main__':
         access_token="JKGdsbS4aMucvo3achZfhxuuga6I5k"
     )
 
-    response = nylas.calendars.all()
+    response = nylas.calendars.delete("1sziuui6auwm4tzvxe2620vyd")
     print(response)

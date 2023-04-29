@@ -1,7 +1,6 @@
 import requests
 from nylas import APIClient
 
-from client import ACCESS_TOKEN
 from client import CLIENT_ID
 from client import CLIENT_SECRET
 
@@ -49,6 +48,7 @@ def create_virtual_calendar(access_token):
     calendar.save()
     return calendar.id
 
+
 def get_all_calendars(account_id, access_code):
     nylas = APIClient(
         client_id=CLIENT_ID,
@@ -62,13 +62,17 @@ if __name__ == '__main__':
     account_id, access_code = create_nylas_account()
     print(f"created account {account_id} with access code {access_code}")
     existing_calendars = get_all_calendars(account_id, access_code)
-    print(f"num of existing calendars after creation of account: {len(existing_calendars)}")
+    print(f"num of existing calendars after creation of account: {existing_calendars}")
     calendar_id = create_virtual_calendar(access_code)
     print(f"created calendar {calendar_id}")
 
-
-
     # cleanup
+    nylas = APIClient(
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        access_token=access_code
+    )
+    nylas.calendars.delete(calendar_id)
     nylas = APIClient(
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
