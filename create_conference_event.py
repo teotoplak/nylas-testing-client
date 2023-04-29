@@ -42,9 +42,6 @@ if __name__ == '__main__':
     # notify_participants='true' will send a notification email to
     # all email addresses specified in the participant subobject
 
-    # Create a new event
-    event = nylas.events.create()
-
     # add conferencing details
     event.conferencing = {
         "provider": "Zoom Meeting",
@@ -56,3 +53,7 @@ if __name__ == '__main__':
             },
         },
     }
+
+    # Create a new event
+    event = nylas.events.create()
+

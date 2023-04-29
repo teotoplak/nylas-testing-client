@@ -8,7 +8,7 @@ if __name__ == '__main__':
     nylas = APIClient(
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
-        access_token=ACCESS_TOKEN
+        access_token="JKGdsbS4aMucvo3achZfhxuuga6I5k"
     )
 
     response = nylas.calendars.all()
