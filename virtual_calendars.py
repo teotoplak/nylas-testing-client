@@ -19,12 +19,11 @@ def create_nylas_account(key="api-testing"):
     nylas_authorization = requests.post(
         "https://api.nylas.com/connect/authorize", json=content
     )
-    nylas_code = nylas_authorization.json()["code"]
 
     register_content = {
         "client_id": CLIENT_ID,
         "client_secret": CLIENT_SECRET,
-        "code": nylas_code
+        "code": nylas_authorization.json()["code"]
     }
 
     registering_account = requests.post(
