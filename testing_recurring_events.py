@@ -8,24 +8,6 @@ from client import CLIENT_SECRET
 from client import ACCESS_TOKEN
 
 
-def create_recurring_event(nylas: APIClient, calendar_id):
-    # Create a new event
-    event = nylas.events.create()
-    event.title = "Test Recurring Event"
-
-    event.calendar_id = calendar_id
-
-    # The event date/time can be set in one of 3 ways.
-    today_date = datetime.today().strftime('%Y-%m-%d')
-    event.when = {"start_date": today_date, "end_date": today_date}
-
-    # Configure recurring events using RRULE specifications
-    # event.recurrence = {"rrule": ["RRULE:FREQ=DAILY;COUNT=3"], "timezone": "America_Los_Angeles"}
-    event.save()
-    # Create a new event
-    return nylas.events.create()
-
-
 def create_recurring_event_http(nylas: APIClient, calendar_id):
     today_date = datetime.today().strftime('%Y-%m-%d')
     url = "https://api.nylas.com/events"
@@ -41,12 +23,12 @@ def create_recurring_event_http(nylas: APIClient, calendar_id):
             "start_date": today_date,
             "end_date": today_date
         },
-        # "recurrence": {
-        #     "rrule": [
-        #         "RRULE:FREQ=WEEKLY;BYDAY=MO"
-        #     ],
-        #     "timezone": "America/New_York"
-        # }
+        "recurrence": {
+            "rrule": [
+                "RRULE:FREQ=DAILY;COUNT=3"
+            ],
+            "timezone": "America/New_York"
+        }
     }
     response = requests.post(url, headers=headers, json=data)
     print(response.json())
@@ -70,7 +52,12 @@ if __name__ == '__main__':
 
     # creating recurring event
     recurring_event = create_recurring_event_http(nylas, primary_calendar['id'])
-    print(f"recurring event ID: {recurring_event}")
+    print(f"recurring event created ID: {recurring_event}")
+
+
+
+    nylas.events.delete(recurring_event['id'])
+    print(f"recurring event deleted ID: {recurring_event['id']}")
 
 
 
