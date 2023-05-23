@@ -41,9 +41,54 @@ def create_calendar():
         },
     ).json()
 
+
+def create_event():
+    return requests.post(
+        url=f"{DOMAIN}/v3/grants/{grant_id}/events?calendar_id={calendar_id}",
+        headers=HEADERS,
+        json={
+            "title": "Birthday Party",
+            "status": "confirmed",
+            "busy": True,
+            "participants": [
+              {
+                "name": "Aristotle",
+                "email": "aristotle@nylas.com",
+                "status": "yes"
+              }
+            ],
+            "description": "Come ready to skate",
+            "when": {
+              "time": 1408875644
+            },
+            "location": "Roller Rink",
+            "recurrence": {
+              "rrule": [
+                "RRULE:FREQ=WEEKLY;BYDAY=MO"
+              ],
+              "timezone": "America/New_York"
+            }
+        },
+    ).json()
+
+
+def get_event():
+    return requests.get(
+        url=f"{DOMAIN}/v3/grants/{grant_id}/events/{event_id}?calendar_id={calendar_id}",
+        headers=HEADERS,
+    ).json()
+
+
 def delete_calendar(calendar_id):
     return requests.post(
         url=f"{DOMAIN}/v3/grants/{grant_id}/calendars/{calendar_id}",
+        headers=HEADERS,
+    ).json()
+
+
+def delete_event(event_id):
+    return requests.delete(
+        url=f"{DOMAIN}/v3/grants/{grant_id}/events/{event_id}?calendar_id={calendar_id}",
         headers=HEADERS,
     ).json()
 
@@ -54,29 +99,32 @@ if __name__ == '__main__':
     """
     grant_id = None
     calendar_id = None
+    event_id = None
 
     try:
-        # create grant
         res = create_grant()
         print(f"created grant: {res}")
         grant_id = res['data']['id']
 
-        # create calendar
         res = create_calendar()
         print(f"created calendar: {res}")
         calendar_id = res['data']['id']
 
+        res = create_event()
+        print(f"created event: {res}")
+        event_id = res['data']['id']
+
+        res = get_event()
+        print(f"get event: {res}")
+
     finally:
+        if event_id:
+            res = delete_event(event_id)
+            print(f"deleted event: {res}")
         if calendar_id:
             res = delete_calendar(calendar_id)
             print(f"deleted calendar: {res}")
         if grant_id:
             res = delete_grant(grant_id)
             print(f"deleted grant: {res}")
-
-
-
-
-    # create event
-    # delete both
 
