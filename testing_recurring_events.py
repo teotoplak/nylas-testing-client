@@ -9,12 +9,12 @@ from client import CLIENT_SECRET
 from client import ACCESS_TOKEN
 
 
-def get_expanded_event(calendar_id, event_id):
+def get_event(calendar_id, event_id, expanded):
     url = "https://api.nylas.com/events"
     params = {
         "calendar_id": calendar_id,
         "event_id": event_id,
-        "expand_recurring": "true"
+        "expand_recurring": expanded
     }
     headers = {
         "Accept": "application/json",
@@ -98,12 +98,18 @@ if __name__ == '__main__':
         print(f"recurring event created ID: {recurring_event}")
         recurring_event_id = recurring_event['id']
 
-        expanded_recurring_event = get_expanded_event(primary_calendar['id'], recurring_event_id)
+        expanded_recurring_event = get_event(primary_calendar['id'], recurring_event_id, "true")
         print(f"expanded recurring event: {expanded_recurring_event}")
 
         # updating child of recurring event
         updated_event = update_event(expanded_recurring_event[0]['id'])
         print(f"updated child event ID: {updated_event}")
+
+        expanded_recurring_event = get_event(primary_calendar['id'], recurring_event_id, "true")
+        print(f"expanded recurring event: {expanded_recurring_event}")
+
+        recurring_event = get_event(primary_calendar['id'], recurring_event_id, "false")
+        print(f"recurring event: {recurring_event}")
 
     finally:
         if recurring_event_id:
