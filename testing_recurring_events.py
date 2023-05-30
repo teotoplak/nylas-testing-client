@@ -25,6 +25,24 @@ def get_event(calendar_id, event_id, expanded):
     return response.json()
 
 
+def get_events(calendar_id, starts_after, ends_before):
+    url = "https://api.nylas.com/events"
+    params = {
+        "calendar_id": calendar_id,
+        "starts_after": starts_after,
+        "ends_before": ends_before,
+        "expand_recurring": False
+    }
+    headers = {
+        "Accept": "application/json",
+        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    response = requests.get(url, headers=headers, params=params)
+    return response.json()
+
+
+
 def update_event(event_id):
     url = f"https://api.nylas.com/events/{event_id}"
     headers = {
@@ -62,6 +80,9 @@ def create_recurring_event_http(nylas: APIClient, calendar_id):
                 exdate_format([today_date_short, tomorrow_date_short]),
             ],
             "timezone": "America/New_York"
+        },
+        "metadata": {
+            "recurring_test": "yes"
         }
     }
     response = requests.post(url, headers=headers, json=data)
@@ -105,11 +126,19 @@ if __name__ == '__main__':
         updated_event = update_event(expanded_recurring_event[0]['id'])
         print(f"updated child event ID: {updated_event}")
 
-        expanded_recurring_event = get_event(primary_calendar['id'], recurring_event_id, "true")
-        print(f"expanded recurring event: {expanded_recurring_event}")
+        expanded_recurring_event_after_update = get_event(primary_calendar['id'], recurring_event_id, "true")
+        print(f"expanded recurring event: {expanded_recurring_event_after_update}")
 
-        recurring_event = get_event(primary_calendar['id'], recurring_event_id, "false")
-        print(f"recurring event: {recurring_event}")
+        recurring_event_after_update = get_event(primary_calendar['id'], recurring_event_id, "false")
+        print(f"recurring event: {recurring_event_after_update}")
+
+        # to see if we treat updated child event as a separate event
+        all_events = get_events(
+            primary_calendar['id'],
+            datetime.now().timestamp() - timedelta(days=1).total_seconds(),
+            datetime.now().timestamp() + timedelta(weeks=1).total_seconds()
+        )
+        print(f"all events: {all_events}")
 
     finally:
         if recurring_event_id:
