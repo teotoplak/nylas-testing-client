@@ -37,7 +37,10 @@ def create_calendar():
             "name": "My New Calendar",
             "description": "Description of my new calendar",
             "location": "Location description",
-            "timezone": "America/Los_Angeles"
+            "timezone": "America/Los_Angeles",
+            "metadata": {
+                "foo": "bar"
+            }
         },
     ).json()
 
