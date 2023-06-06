@@ -67,7 +67,7 @@ def create_event():
             "location": "Roller Rink",
             "recurrence": {
               "rrule": [
-                "RRULE:FREQ=WEEKLY;BYDAY=MO"
+                "RRULE:FREQ=WEEKLY;COUNT=8"
               ],
               "timezone": "America/New_York"
             }
@@ -83,7 +83,7 @@ def get_event():
 
 
 def delete_calendar(calendar_id):
-    return requests.post(
+    return requests.delete(
         url=f"{DOMAIN}/v3/grants/{grant_id}/calendars/{calendar_id}",
         headers=HEADERS,
     ).json()
