@@ -5,11 +5,12 @@ import requests
 from client import V3_API_KEY
 
 STAGING_HOST = "https://api-staging.us.nylas.com"
-LOCAL_PASSTHRU_DOMAIN = "http://localhost:8008/"
+LOCAL_PASSTHRU_DOMAIN = "http://localhost:8008"
 HEADERS = {
     'Content-Type': 'application/json',
     'Authorization': f'Bearer {V3_API_KEY}',
     'Accept': 'application/json',
+    'X-Nylas-Provider-Gma': 'virtual-calendar'
 }
 
 
@@ -129,21 +130,31 @@ if __name__ == '__main__':
             print(f"created grant: {res}")
             grant_id = res['data']['id']
             url = f"{STAGING_HOST}/v3/grants/{grant_id}"
+        if host == "passthru":
+            url = f"{LOCAL_PASSTHRU_DOMAIN}/v3"
 
         res = create_calendar(url)
         print(f"created calendar: {res}")
-        calendar_id = res['data']['id']
+        if host == "staging":
+            res = res['data']
+        calendar_id = res['id']
 
         res = create_event(url)
         print(f"created event: {res}")
-        event_id = res['data']['id']
+        if host == "staging":
+            res = res['data']
+        event_id = res['id']
 
         res = get_event(url)
+        if host == "staging":
+            res = res['data']
         print(f"get event: {res}")
 
         res = get_all_events(url, {
             "expand_recurring": "true",
         })
+        if host == "staging":
+            res = res['data']
         print(f"get all events: {res}")
 
     finally:
@@ -153,7 +164,7 @@ if __name__ == '__main__':
         if calendar_id:
             res = delete_calendar(url, calendar_id)
             print(f"deleted calendar: {res}")
-        if grant_id:
+        if host == "staging" and grant_id:
             res = delete_grant(grant_id)
             print(f"deleted grant: {res}")
 
