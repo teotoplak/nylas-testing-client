@@ -92,7 +92,7 @@ def get_all_events(url, params):
 
 def get_event(url):
     return requests.get(
-        url=f"{url}?calendar_id={calendar_id}",
+        url=f"{url}/events/{event_id}?calendar_id={calendar_id}",
         headers=HEADERS,
     ).json()
 
@@ -119,8 +119,8 @@ if __name__ == '__main__':
     calendar_id = None
     event_id = None
 
-    host = "staging"
-    # host = "passthru"
+    # host = "staging"
+    host = "passthru"
     url = None
 
     try:
