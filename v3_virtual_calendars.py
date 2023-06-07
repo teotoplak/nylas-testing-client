@@ -105,7 +105,7 @@ def delete_calendar(url, calendar_id):
 
 def delete_event(url, event_id):
     return requests.delete(
-        url=f"{url}?calendar_id={calendar_id}",
+        url=f"{url}/events/{event_id}?calendar_id={calendar_id}",
         headers=HEADERS,
     ).json()
 
