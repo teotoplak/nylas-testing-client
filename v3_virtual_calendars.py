@@ -3,6 +3,7 @@ from datetime import timedelta
 
 import requests
 from client import V3_API_KEY
+from testing_recurring_events import exdate_format
 
 STAGING_HOST = "https://api-staging.us.nylas.com"
 LOCAL_PASSTHRU_DOMAIN = "http://localhost:8008"
@@ -51,7 +52,7 @@ def create_calendar(url):
 
 
 def create_event(url):
-    tomorrow_date = (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d')
+    tomorrow_date = (datetime.today() + timedelta(days=1)).strftime('%Y%m%d')
     return requests.post(
         url=f"{url}/events?calendar_id={calendar_id}",
         headers=HEADERS,
@@ -68,13 +69,14 @@ def create_event(url):
             ],
             "description": "Come ready to skate",
             "when": {
-              # "date": tomorrow_date,
-                "time": 1408875644
+              "date": tomorrow_date,
+                # "time": 1408875644
             },
             "location": "Roller Rink",
             "recurrence": {
               "rrule": [
-                "RRULE:FREQ=WEEKLY;COUNT=3"
+                "RRULE:FREQ=WEEKLY;COUNT=3",
+                exdate_format([tomorrow_date])
               ],
               "timezone": "America/New_York"
             }
@@ -119,8 +121,8 @@ if __name__ == '__main__':
     calendar_id = None
     event_id = None
 
-    # host = "staging"
-    host = "passthru"
+    host = "staging"
+    # host = "passthru"
     url = None
 
     try:
@@ -156,6 +158,7 @@ if __name__ == '__main__':
         if host == "staging":
             res = res['data']
         print(f"get all events: {res}")
+        print(f"get all events count: {len(res)}")
 
     finally:
         if event_id:
