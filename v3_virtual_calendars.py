@@ -51,6 +51,13 @@ def create_calendar(url):
     ).json()
 
 
+def get_calendar(url, calendar_id):
+    return requests.get(
+        url=f"{url}/calendars/{calendar_id}",
+        headers=HEADERS,
+    ).json()
+
+
 def create_event(url):
     tomorrow_date = (datetime.today() + timedelta(days=1)).strftime('%Y%m%d')
     return requests.post(
@@ -140,6 +147,9 @@ if __name__ == '__main__':
         if host == "staging":
             res = res['data']
         calendar_id = res['id']
+
+        res = get_calendar(url, calendar_id)
+        print(f"get calendar: {res}")
 
         res = create_event(url)
         print(f"created event: {res}")
