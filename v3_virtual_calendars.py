@@ -99,7 +99,7 @@ def get_all_events(url, params):
     ).json()
 
 
-def get_event(url):
+def get_event(url, event_id):
     return requests.get(
         url=f"{url}/events/{event_id}?calendar_id={calendar_id}",
         headers=HEADERS,
@@ -157,10 +157,13 @@ if __name__ == '__main__':
             res = res['data']
         event_id = res['id']
 
-        res = get_event(url)
+        res = get_event(url, event_id)
         if host == "staging":
             res = res['data']
         print(f"get event: {res}")
+
+        res_none = get_event(url, "non-existent-event-id")
+        print(f"for getting non-existent event: {res_none}")
 
         res = get_all_events(url, {
             "expand_recurring": "true",
@@ -171,6 +174,7 @@ if __name__ == '__main__':
         print(f"get all events count: {len(res)}")
 
     finally:
+        print(f"=== CLEANING UP ===")
         if event_id:
             res = delete_event(url, event_id)
             print(f"deleted event: {res}")
