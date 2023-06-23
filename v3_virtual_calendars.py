@@ -86,6 +86,12 @@ def create_event(url):
                 exdate_format([tomorrow_date])
               ],
               "timezone": "America/New_York"
+            },
+            "conferencing": {
+                "provider": "Zoom Meeting",
+                "details": {
+                    "url": "https://zoom.us/j/1234567890",
+                }
             }
         },
     ).json()
