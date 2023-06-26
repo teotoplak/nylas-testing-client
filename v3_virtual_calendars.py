@@ -43,6 +43,11 @@ TEST_EVENT = {
         "details": {
             "url": "https://zoom.us/j/1234567890",
         }
+    },
+    "metadata": {
+        # this key should be indexed
+        "key1": "foo",
+        "something": "bar"
     }
 }
 
@@ -186,6 +191,9 @@ if __name__ == '__main__':
 
         res = update_event(url, calendar_id, event_id)
         print(f"updated event: {res}")
+        if host == "staging":
+            res = res['data']
+        assert res['participants'][0]['status'] == 'no'
 
         res = get_event(url, event_id)
         if host == "staging":
@@ -198,10 +206,18 @@ if __name__ == '__main__':
         res = get_all_events(url, {
             "expand_recurring": "true",
         })
+        print(f"get all events: {res}")
         if host == "staging":
             res = res['data']
-        print(f"get all events: {res}")
         print(f"get all events count: {len(res)}")
+
+        res = get_all_events(url, {
+            "metadata_pair": "key1:foo",
+        })
+        print(f"get all events with metadata filter: {res}")
+        if host == "staging":
+            res = res['data']
+        assert len(res) == 1
 
     finally:
         print(f"=== CLEANING UP ===")
