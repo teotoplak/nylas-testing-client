@@ -13,6 +13,38 @@ HEADERS = {
     'Accept': 'application/json',
     'X-Nylas-Provider-Gma': 'virtual-calendar'
 }
+tomorrow_date = (datetime.today() + timedelta(days=1)).strftime('%Y%m%d')
+TEST_EVENT = {
+    "title": "Birthday Party",
+    "status": "confirmed",
+    "busy": True,
+    "participants": [
+      {
+        "name": "Aristotle",
+        "email": "aristotle@nylas.com",
+        "status": "yes"
+      }
+    ],
+    "description": "Come ready to skate",
+    "when": {
+      "date": tomorrow_date,
+        # "time": 1408875644
+    },
+    "location": "Roller Rink",
+    "recurrence": {
+      "rrule": [
+        "RRULE:FREQ=WEEKLY;COUNT=3",
+        exdate_format([tomorrow_date])
+      ],
+      "timezone": "America/New_York"
+    },
+    "conferencing": {
+        "provider": "Zoom Meeting",
+        "details": {
+            "url": "https://zoom.us/j/1234567890",
+        }
+    }
+}
 
 
 def create_grant():
@@ -59,41 +91,25 @@ def get_calendar(url, calendar_id):
 
 
 def create_event(url):
-    tomorrow_date = (datetime.today() + timedelta(days=1)).strftime('%Y%m%d')
     return requests.post(
         url=f"{url}/events?calendar_id={calendar_id}",
         headers=HEADERS,
-        json={
-            "title": "Birthday Party",
-            "status": "confirmed",
-            "busy": True,
-            "participants": [
-              {
-                "name": "Aristotle",
-                "email": "aristotle@nylas.com",
-                "status": "yes"
-              }
-            ],
-            "description": "Come ready to skate",
-            "when": {
-              "date": tomorrow_date,
-                # "time": 1408875644
-            },
-            "location": "Roller Rink",
-            "recurrence": {
-              "rrule": [
-                "RRULE:FREQ=WEEKLY;COUNT=3",
-                exdate_format([tomorrow_date])
-              ],
-              "timezone": "America/New_York"
-            },
-            "conferencing": {
-                "provider": "Zoom Meeting",
-                "details": {
-                    "url": "https://zoom.us/j/1234567890",
-                }
-            }
-        },
+        json=TEST_EVENT,
+    ).json()
+
+
+def update_event(url, calendar_id, event_id):
+    new_event = TEST_EVENT
+    new_event['title'] = 'Updated Title'
+    new_event['participants'][0] = {
+            "name": "Aristotle",
+            "email": "aristotle@nylas.com",
+            "status": "no"
+    }
+    return requests.put(
+        url=f"{url}/events/{event_id}?calendar_id={calendar_id}",
+        headers=HEADERS,
+        json=new_event,
     ).json()
 
 
@@ -167,6 +183,14 @@ if __name__ == '__main__':
         if host == "staging":
             res = res['data']
         print(f"get event: {res}")
+
+        res = update_event(url, calendar_id, event_id)
+        print(f"updated event: {res}")
+
+        res = get_event(url, event_id)
+        if host == "staging":
+            res = res['data']
+        print(f"get updated event: {res}")
 
         res_none = get_event(url, "non-existent-event-id")
         print(f"for getting non-existent event: {res_none}")
