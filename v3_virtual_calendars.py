@@ -56,8 +56,8 @@ TEST_EVENT = {
     },
     "metadata": {
         # this key should be indexed
+        "foo": "bar",
         "key1": "foo",
-        "something": "bar"
     }
 }
 
@@ -137,9 +137,9 @@ def update_event(url, calendar_id, event_id):
             "status": "no"
     }
     new_event['metadata'] = {
-        'key1': 'bar',
-        'something': 'foo',
-        'new_key': 'updated_value',
+        "foo": "bar",
+        "key1": "foo",
+        'new_key': 'new_value',
     }
     return requests.put(
         url=f"{url}/events/{event_id}?calendar_id={calendar_id}",
