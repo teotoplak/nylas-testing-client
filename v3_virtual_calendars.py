@@ -13,6 +13,16 @@ HEADERS = {
     'Accept': 'application/json',
     'X-Nylas-Provider-Gma': 'virtual-calendar'
 }
+TEST_CALENDAR = {
+    "name": "My New Calendar",
+    "description": "Description of my new calendar",
+    "location": "Location description",
+    "timezone": "America/Los_Angeles",
+    "metadata": {
+        "foo": "bar",
+        "key1": "foo",
+    },
+}
 tomorrow_date = (datetime.today() + timedelta(days=1)).strftime('%Y%m%d')
 TEST_EVENT = {
     "title": "Birthday Party",
@@ -76,16 +86,22 @@ def create_calendar(url):
     return requests.post(
         url=f"{url}/calendars",
         headers=HEADERS,
-        json={
-            "name": "My New Calendar",
-            "description": "Description of my new calendar",
-            "location": "Location description",
-            "timezone": "America/Los_Angeles",
-            "metadata": {
-                "foo": "bar",
-                "key1": "foo",
-            },
-        },
+        json=TEST_CALENDAR,
+    ).json()
+
+
+def update_calendar(url, calendar_id):
+    new_calendar = TEST_CALENDAR
+    new_calendar['name'] = 'Updated Name'
+    new_calendar['metadata'] = {
+        "foo": "bar",
+        "key1": "foo",
+        'new_key': 'new_value',
+    }
+    return requests.put(
+        url=f"{url}/calendars/{calendar_id}",
+        headers=HEADERS,
+        json=TEST_CALENDAR,
     ).json()
 
 
@@ -119,6 +135,11 @@ def update_event(url, calendar_id, event_id):
             "name": "Aristotle",
             "email": "aristotle@nylas.com",
             "status": "no"
+    }
+    new_event['metadata'] = {
+        'key1': 'bar',
+        'something': 'foo',
+        'new_key': 'updated_value',
     }
     return requests.put(
         url=f"{url}/events/{event_id}?calendar_id={calendar_id}",
@@ -185,7 +206,19 @@ if __name__ == '__main__':
         calendar_id = res['id']
 
         res = get_calendar(url, calendar_id)
+        if host == "staging":
+            res = res['data']
         print(f"get calendar: {res}")
+
+        res = update_calendar(url, calendar_id)
+        if host == "staging":
+            res = res['data']
+        print(f"update calendar: {res}")
+
+        res = get_calendar(url, calendar_id)
+        if host == "staging":
+            res = res['data']
+        print(f"get updated calendar: {res}")
 
         res = get_all_calendars(url, {
             "metadata_pair": "key1:foo",
