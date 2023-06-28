@@ -267,8 +267,7 @@ if __name__ == '__main__':
         print(f"get all events with metadata filter: {res}")
         if host == "staging":
             res = res['data']
-        # TODO: need to fix this bug
-        # assert len(res) == 1
+        assert len(res) == 1
 
     finally:
         print(f"=== CLEANING UP ===")
