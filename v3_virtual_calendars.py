@@ -234,10 +234,10 @@ if __name__ == '__main__':
             res = res['data']
         event_id = res['id']
 
-        res = get_event(url, event_id)
+        res = get_event(url, "2314231")
+        print(f"get event: {res}")
         if host == "staging":
             res = res['data']
-        print(f"get event: {res}")
 
         res = update_event(url, calendar_id, event_id)
         print(f"updated event: {res}")
