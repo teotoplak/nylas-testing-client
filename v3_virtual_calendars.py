@@ -128,19 +128,7 @@ def create_event(url):
     ).json()
 
 
-def update_event(url, calendar_id, event_id):
-    new_event = TEST_EVENT
-    new_event['title'] = 'Updated Title'
-    new_event['participants'][0] = {
-            "name": "Aristotle",
-            "email": "aristotle@nylas.com",
-            "status": "no"
-    }
-    new_event['metadata'] = {
-        "foo": "bar",
-        "key1": "foo",
-        'new_key': 'new_value',
-    }
+def update_event(url, calendar_id, event_id, new_event):
     return requests.put(
         url=f"{url}/events/{event_id}?calendar_id={calendar_id}",
         headers=HEADERS,
@@ -234,12 +222,24 @@ if __name__ == '__main__':
             res = res['data']
         event_id = res['id']
 
-        res = get_event(url, "2314231")
+        res = get_event(url, event_id)
         print(f"get event: {res}")
         if host == "staging":
             res = res['data']
 
-        res = update_event(url, calendar_id, event_id)
+        new_event = TEST_EVENT
+        new_event['title'] = 'Updated Title'
+        new_event['participants'][0] = {
+            "name": "Aristotle",
+            "email": "aristotle@nylas.com",
+            "status": "no"
+        }
+        new_event['metadata'] = {
+            "foo": "bar",
+            "key1": "foo",
+            'new_key': 'new_value',
+        }
+        res = update_event(url, calendar_id, event_id, new_event)
         print(f"updated event: {res}")
         if host == "staging":
             res = res['data']
