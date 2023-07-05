@@ -174,7 +174,7 @@ if __name__ == '__main__':
     event_id = None
 
     host = "staging"
-    # host = "passthru"
+    # host = "local"
     url = None
 
     try:
@@ -184,7 +184,7 @@ if __name__ == '__main__':
             print(f"created grant: {res}")
             grant_id = res['data']['id']
             url = f"{STAGING_HOST}/v3/grants/{grant_id}"
-        if host == "passthru":
+        if host == "local":
             url = f"{LOCAL_PASSTHRU_DOMAIN}/v3"
 
         res = create_calendar(url)
