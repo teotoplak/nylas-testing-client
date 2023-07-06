@@ -6,22 +6,31 @@ from client import V3_API_KEY
 from testing_recurring_events import exdate_format
 
 STAGING_HOST = "https://api-staging.us.nylas.com"
-LOCAL_PASSTHRU_DOMAIN = "http://localhost:8008"
+LOCAL_PASSTHRU_DOMAIN = "http://localhost:6060"
 HEADERS = {
     'Content-Type': 'application/json',
     'Authorization': f'Bearer {V3_API_KEY}',
     'Accept': 'application/json',
     'X-Nylas-Provider-Gma': 'virtual-calendar'
 }
+METADATA = {
+    "nonindex1": "value1",
+    "nonindex2": "value2",
+    "key1": "foo",
+    "key2": "foo",
+}
+METADATA_NEW = {
+    "nonindex1": "value1",
+    "key1": "foo",
+    "key2": "foonew",
+    "nonindexnew": "valuenew"
+}
 TEST_CALENDAR = {
     "name": "My New Calendar",
     "description": "Description of my new calendar",
     "location": "Location description",
     "timezone": "America/Los_Angeles",
-    "metadata": {
-        "foo": "bar",
-        "key1": "foo",
-    },
+    "metadata": METADATA,
 }
 tomorrow_date = (datetime.today() + timedelta(days=1)).strftime('%Y%m%d')
 TEST_EVENT = {
@@ -54,11 +63,7 @@ TEST_EVENT = {
             "url": "https://zoom.us/j/1234567890",
         }
     },
-    "metadata": {
-        # this key should be indexed
-        "foo": "bar",
-        "key1": "foo",
-    }
+    "metadata": METADATA
 }
 
 
@@ -93,11 +98,7 @@ def create_calendar(url):
 def update_calendar(url, calendar_id):
     new_calendar = TEST_CALENDAR
     new_calendar['name'] = 'Updated Name'
-    new_calendar['metadata'] = {
-        "foo": "bar",
-        "key1": "foo",
-        'new_key': 'new_value',
-    }
+    new_calendar['metadata'] = METADATA_NEW
     return requests.put(
         url=f"{url}/calendars/{calendar_id}",
         headers=HEADERS,
@@ -173,8 +174,8 @@ if __name__ == '__main__':
     calendar_id = None
     event_id = None
 
-    host = "staging"
-    # host = "local"
+    # host = "staging"
+    host = "local"
     url = None
 
     try:
@@ -234,11 +235,7 @@ if __name__ == '__main__':
             "email": "aristotle@nylas.com",
             "status": "no"
         }
-        new_event['metadata'] = {
-            "foo": "bar",
-            "key1": "foo",
-            'new_key': 'new_value',
-        }
+        new_event['metadata'] = METADATA_NEW
         res = update_event(url, calendar_id, event_id, new_event)
         print(f"updated event: {res}")
         if host == "staging":
