@@ -2,18 +2,13 @@ from datetime import datetime
 from datetime import timedelta
 
 import requests
-from client import V3_API_KEY
+from client import V3_API_KEY_STAGING
+from client import V3_API_KEY_PRODUCTION
 from testing_recurring_events import exdate_format
 
 STAGING_HOST = "https://api-staging.us.nylas.com"
 PROD_HOST = "https://api.us.nylas.com"
 LOCAL_PASSTHRU_DOMAIN = "http://localhost:6060"
-HEADERS = {
-    'Content-Type': 'application/json',
-    'Authorization': f'Bearer {V3_API_KEY}',
-    'Accept': 'application/json',
-    'X-Nylas-Provider-Gma': 'virtual-calendar'
-}
 METADATA = {
     "nonindex1": "value1",
     "nonindex2": "value2",
@@ -185,17 +180,30 @@ if __name__ == '__main__':
     try:
 
         if host == "staging":
+            HEADERS = {
+                'Content-Type': 'application/json',
+                'Authorization': f'Bearer {V3_API_KEY_STAGING}',
+                'Accept': 'application/json',
+                'X-Nylas-Provider-Gma': 'virtual-calendar'
+            }
             res = create_grant(STAGING_HOST)
             print(f"created grant: {res}")
             grant_id = res['data']['id']
             url = f"{STAGING_HOST}/v3/grants/{grant_id}"
         if host == "prod":
+            HEADERS = {
+                'Content-Type': 'application/json',
+                'Authorization': f'Bearer {V3_API_KEY_PRODUCTION}',
+                'Accept': 'application/json',
+                'X-Nylas-Provider-Gma': 'virtual-calendar'
+            }
             res = create_grant(PROD_HOST)
             print(f"created grant: {res}")
             grant_id = res['data']['id']
             url = f"{PROD_HOST}/v3/grants/{grant_id}"
         if host == "local":
             url = f"{LOCAL_PASSTHRU_DOMAIN}/v3"
+
 
         res = create_calendar(url)
         print(f"created calendar: {res}")
