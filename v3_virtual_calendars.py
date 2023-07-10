@@ -10,10 +10,12 @@ STAGING_HOST = "https://api-staging.us.nylas.com"
 PROD_HOST = "https://api.us.nylas.com"
 LOCAL_PASSTHRU_DOMAIN = "http://localhost:6060"
 METADATA = {
+    "key1": "foo",
     "key-to-persist": "initial-value",
     "key-to-delete": "initial-value",
 }
 METADATA_NEW = {
+    "key1": "foo",
     "key-to-persist": "updated-value",
 }
 TEST_CALENDAR = {
@@ -227,7 +229,7 @@ if __name__ == '__main__':
         print(f"get all calendars: {res}")
         if e2e:
             res = res['data']
-        # assert len(res) == 1
+        assert len(res) == 1
 
         res = create_event(url)
         print(f"created event: {res}")
@@ -267,7 +269,10 @@ if __name__ == '__main__':
             res = res['data']
         print(f"get updated child event: {res}")
 
-        new_event = TEST_EVENT
+        res = get_event(url, event_id)
+        if e2e:
+            res = res['data']
+        new_event = res
         new_event['title'] = 'Updated Title'
         new_event['participants'][0] = {
             "name": "Aristotle",
@@ -275,6 +280,8 @@ if __name__ == '__main__':
             "status": "no"
         }
         new_event['metadata'] = METADATA_NEW
+        # otherwise request will be rejected since you can't send event.when.object
+        del new_event['when']['object']
         res = update_event(url, calendar_id, event_id, new_event)
         print(f"updated event: {res}")
         if e2e:
