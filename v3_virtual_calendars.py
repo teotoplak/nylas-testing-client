@@ -200,6 +200,11 @@ if __name__ == '__main__':
             url = f"{PROD_HOST}/v3/grants/{grant_id}"
         if host == "local":
             url = f"{LOCAL_PASSTHRU_DOMAIN}/v3"
+            HEADERS = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Nylas-Provider-Gma': 'virtual-calendar'
+            }
 
 
         res = create_calendar(url)
