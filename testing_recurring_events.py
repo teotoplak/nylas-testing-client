@@ -93,7 +93,7 @@ def exdate_format(dates):
     dates_formatted = ""
     for date in dates:
         dates_formatted += f"{date},"
-    return f"EXDATE;VALUE=DATE:{dates_formatted[:-1]}"
+    return f"EXDATE:{dates_formatted[:-1]}"
 
 
 if __name__ == '__main__':

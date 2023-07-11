@@ -114,11 +114,11 @@ def get_all_calendars(url, params):
     ).json()
 
 
-def create_event(url):
+def create_event(url, event):
     return requests.post(
         url=f"{url}/events?calendar_id={calendar_id}",
         headers=HEADERS,
-        json=TEST_EVENT,
+        json=event,
     ).json()
 
 
@@ -236,7 +236,7 @@ if __name__ == '__main__':
             res = res['data']
         assert len(res) == 1
 
-        res = create_event(url)
+        res = create_event(url, TEST_EVENT)
         print(f"created event: {res}")
         if e2e:
             res = res['data']
