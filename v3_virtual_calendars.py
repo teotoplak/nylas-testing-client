@@ -253,6 +253,8 @@ if __name__ == '__main__':
         if e2e:
             res = res['data']
         new_child_event = res[0]
+        # must add this because of bug in VCs not storing recurrence.timezone
+        new_child_event['recurrence']['timezone'] = 'UTC'
         new_child_event['title'] = 'Updated Child Title'
         new_child_event['participants'][0] = {
             "name": "Aristotle",
@@ -285,6 +287,8 @@ if __name__ == '__main__':
             "status": "no"
         }
         new_event['metadata'] = METADATA_NEW
+        # must add this because of bug in VCs not storing recurrence.timezone
+        new_event['recurrence']['timezone'] = 'UTC'
         # otherwise request will be rejected since you can't send event.when.object
         del new_event['when']['object']
         res = update_event(url, calendar_id, event_id, new_event)
