@@ -1,5 +1,5 @@
 
-from client import nylas
+from const import nylas
 
 CALENDAR_ID = "c95el2sjcmudyo39jwp3rnr83"
 PARTICIPANTS = [

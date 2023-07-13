@@ -2,13 +2,14 @@ from datetime import datetime
 from datetime import timedelta
 
 import requests
-from client import V3_API_KEY_STAGING
-from client import V3_API_KEY_PRODUCTION
+from const import V3_API_KEY_STAGING
+from const import V3_API_KEY_PRODUCTION
+from const import V3_LOCAL_PASSTHRU_DOMAIN
+from const import V3_PROD_DOMAIN
+from const import V3_STAGING_DOMAIN
 from testing_recurring_events import exdate_format
 
-STAGING_HOST = "https://api-staging.us.nylas.com"
-PROD_HOST = "https://api.us.nylas.com"
-LOCAL_PASSTHRU_DOMAIN = "http://localhost:6060"
+
 METADATA = {
     "key1": "foo",
     "key-to-persist": "initial-value",
@@ -75,7 +76,7 @@ def create_grant(host_url):
 
 def delete_grant(grant_id):
     return requests.delete(
-        url=f"{STAGING_HOST}/v3/grants/{grant_id}",
+        url=f"{V3_STAGING_DOMAIN}/v3/grants/{grant_id}",
         headers=HEADERS,
     ).json()
 
@@ -183,10 +184,10 @@ if __name__ == '__main__':
                 'Accept': 'application/json',
                 'X-Nylas-Provider-Gma': 'virtual-calendar'
             }
-            res = create_grant(STAGING_HOST)
+            res = create_grant(V3_STAGING_DOMAIN)
             print(f"created grant: {res}")
             grant_id = res['data']['id']
-            url = f"{STAGING_HOST}/v3/grants/{grant_id}"
+            url = f"{V3_STAGING_DOMAIN}/v3/grants/{grant_id}"
         if host == "prod":
             HEADERS = {
                 'Content-Type': 'application/json',
@@ -194,12 +195,12 @@ if __name__ == '__main__':
                 'Accept': 'application/json',
                 'X-Nylas-Provider-Gma': 'virtual-calendar'
             }
-            res = create_grant(PROD_HOST)
+            res = create_grant(V3_PROD_DOMAIN)
             print(f"created grant: {res}")
             grant_id = res['data']['id']
-            url = f"{PROD_HOST}/v3/grants/{grant_id}"
+            url = f"{V3_PROD_DOMAIN}/v3/grants/{grant_id}"
         if host == "local":
-            url = f"{LOCAL_PASSTHRU_DOMAIN}/v3"
+            url = f"{V3_LOCAL_PASSTHRU_DOMAIN}/v3"
             HEADERS = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',

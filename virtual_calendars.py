@@ -1,8 +1,8 @@
 import requests
 from nylas import APIClient
 
-from client import V2_CLIENT_ID
-from client import V2_CLIENT_SECRET
+from const import V2_CLIENT_ID
+from const import V2_CLIENT_SECRET
 
 
 def create_nylas_account(key="api-testing"):

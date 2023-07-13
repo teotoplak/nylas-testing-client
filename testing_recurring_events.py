@@ -4,9 +4,9 @@ from datetime import timedelta
 
 import requests
 from nylas import APIClient
-from client import V2_CLIENT_ID
-from client import V2_CLIENT_SECRET
-from client import V2_ACCESS_TOKEN
+from const import V2_CLIENT_ID
+from const import V2_CLIENT_SECRET
+from const import V2_ACCESS_TOKEN
 
 
 def get_event(calendar_id, event_id, expanded):
