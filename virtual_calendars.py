@@ -1,13 +1,13 @@
 import requests
 from nylas import APIClient
 
-from client import CLIENT_ID
-from client import CLIENT_SECRET
+from client import V2_CLIENT_ID
+from client import V2_CLIENT_SECRET
 
 
 def create_nylas_account(key="api-testing"):
     content = {
-        "client_id": CLIENT_ID,
+        "client_id": V2_CLIENT_ID,
         "provider": "nylas",
         "scopes": "calendar",
         "email": key,
@@ -21,8 +21,8 @@ def create_nylas_account(key="api-testing"):
     )
 
     register_content = {
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
+        "client_id": V2_CLIENT_ID,
+        "client_secret": V2_CLIENT_SECRET,
         "code": nylas_authorization.json()["code"]
     }
 
@@ -35,8 +35,8 @@ def create_nylas_account(key="api-testing"):
 
 def create_virtual_calendar(access_token):
     nylas = APIClient(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
+        client_id=V2_CLIENT_ID,
+        client_secret=V2_CLIENT_SECRET,
         access_token=access_token
     )
     calendar = nylas.calendars.create()
@@ -50,8 +50,8 @@ def create_virtual_calendar(access_token):
 
 def get_all_calendars(account_id, access_code):
     nylas = APIClient(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
+        client_id=V2_CLIENT_ID,
+        client_secret=V2_CLIENT_SECRET,
         access_token=access_code
     )
     return nylas.calendars.all()
@@ -67,14 +67,14 @@ if __name__ == '__main__':
 
     # cleanup
     nylas = APIClient(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
+        client_id=V2_CLIENT_ID,
+        client_secret=V2_CLIENT_SECRET,
         access_token=access_code
     )
     nylas.calendars.delete(calendar_id)
     nylas = APIClient(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
+        client_id=V2_CLIENT_ID,
+        client_secret=V2_CLIENT_SECRET,
         # access_token=access_code
     )
     nylas.accounts.delete(account_id)

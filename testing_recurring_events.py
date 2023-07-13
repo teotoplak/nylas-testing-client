@@ -4,9 +4,9 @@ from datetime import timedelta
 
 import requests
 from nylas import APIClient
-from client import CLIENT_ID
-from client import CLIENT_SECRET
-from client import ACCESS_TOKEN
+from client import V2_CLIENT_ID
+from client import V2_CLIENT_SECRET
+from client import V2_ACCESS_TOKEN
 
 
 def get_event(calendar_id, event_id, expanded):
@@ -18,7 +18,7 @@ def get_event(calendar_id, event_id, expanded):
     }
     headers = {
         "Accept": "application/json",
-        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Authorization": f"Bearer {V2_ACCESS_TOKEN}",
         "Content-Type": "application/json"
     }
     response = requests.get(url, headers=headers, params=params)
@@ -35,7 +35,7 @@ def get_events(calendar_id, starts_after, ends_before):
     }
     headers = {
         "Accept": "application/json",
-        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Authorization": f"Bearer {V2_ACCESS_TOKEN}",
         "Content-Type": "application/json"
     }
     response = requests.get(url, headers=headers, params=params)
@@ -47,7 +47,7 @@ def update_event(event_id):
     url = f"https://api.nylas.com/events/{event_id}"
     headers = {
         "Accept": "application/json",
-        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Authorization": f"Bearer {V2_ACCESS_TOKEN}",
         "Content-Type": "application/json"
     }
     data = {
@@ -64,7 +64,7 @@ def create_recurring_event_http(nylas: APIClient, calendar_id):
     url = "https://api.nylas.com/events"
     headers = {
         "Accept": "application/json",
-        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Authorization": f"Bearer {V2_ACCESS_TOKEN}",
         "Content-Type": "application/json"
     }
     data = {
@@ -98,9 +98,9 @@ def exdate_format(dates):
 
 if __name__ == '__main__':
     nylas = APIClient(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
-        access_token=ACCESS_TOKEN
+        client_id=V2_CLIENT_ID,
+        client_secret=V2_CLIENT_SECRET,
+        access_token=V2_ACCESS_TOKEN
     )
 
     # getting primary calendar
