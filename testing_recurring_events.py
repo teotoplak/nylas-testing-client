@@ -74,13 +74,10 @@ def create_recurring_event_http(nylas: APIClient, calendar_id):
             "start_date": today_date,
             "end_date": today_date
         },
-        "recurrence": {
-            "rrule": [
-                "RRULE:FREQ=DAILY;COUNT=4",
-                exdate_format([today_date_short, tomorrow_date_short]),
-            ],
-            "timezone": "America/New_York"
-        },
+        "recurrence": [
+            "RRULE:FREQ=DAILY;COUNT=4",
+            exdate_format([today_date_short, tomorrow_date_short]),
+        ],
         "metadata": {
             "recurring_test": "yes"
         }
