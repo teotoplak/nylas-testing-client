@@ -49,9 +49,10 @@ TEST_EVENT = {
         exdate_format([tomorrow_date])
   ],
     "conferencing": {
-        "provider": "Zoom Meeting",
+        "provider": "Google Meet",
         "details": {
             "url": "https://zoom.us/j/1234567890",
+            "phone": ["+1 123 456 7890", "+1 123 456 7891"],
         }
     },
     "metadata": METADATA
