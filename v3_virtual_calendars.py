@@ -213,19 +213,19 @@ if __name__ == '__main__':
         calendar_id = res['id']
 
         res = get_calendar(url, calendar_id)
+        print(f"get calendar: {res}")
         if e2e:
             res = res['data']
-        print(f"get calendar: {res}")
 
         res = update_calendar(url, calendar_id)
+        print(f"update calendar: {res}")
         if e2e:
             res = res['data']
-        print(f"update calendar: {res}")
 
         res = get_calendar(url, calendar_id)
+        print(f"get updated calendar: {res}")
         if e2e:
             res = res['data']
-        print(f"get updated calendar: {res}")
 
         res = get_all_calendars(url, {
             "metadata_pair": "key1:foo",
@@ -262,16 +262,15 @@ if __name__ == '__main__':
         # otherwise request will be rejected since you can't send event.when.object
         del new_child_event['when']['object']
         res = update_event(url, calendar_id, new_child_event['id'], new_child_event)
-        print(f"updated event: {res}")
+        print(f"updated child event: {res}")
         if e2e:
             res = res['data']
         assert res['participants'][0]['status'] == 'no'
-        print(f"updated child event: {res}")
 
         res = get_event(url, res['id'])
+        print(f"get updated child event: {res}")
         if e2e:
             res = res['data']
-        print(f"get updated child event: {res}")
 
         res = get_event(url, event_id)
         if e2e:
