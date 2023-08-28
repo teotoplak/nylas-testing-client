@@ -19,7 +19,7 @@ V3_API_KEY_PRODUCTION = os.getenv('V3_API_KEY_PRODUCTION')
 
 V3_STAGING_DOMAIN = "https://api-staging.us.nylas.com"
 V3_PROD_DOMAIN = "https://api.us.nylas.com"
-V3_LOCAL_PASSTHRU_DOMAIN = "http://localhost:6060"
+V3_LOCAL_PASSTHRU_DOMAIN = "http://localhost:8008"
 
 nylas = APIClient(
         client_id=V2_CLIENT_ID,
