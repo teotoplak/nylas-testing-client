@@ -32,7 +32,7 @@ def create_event(date):
           "date": date,
         },
         "recurrence": [
-            "RRULE:FREQ=DAILY;COUNT=3",
+            "RRULE:FREQ=DAILY",
         ],
         "metadata": METADATA
     }
