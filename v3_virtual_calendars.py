@@ -8,7 +8,7 @@ from const import V3_LOCAL_PASSTHRU_DOMAIN
 from const import V3_PROD_DOMAIN
 from const import V3_STAGING_DOMAIN
 from testing_recurring_events import exdate_format
-
+from v3_auth import create_grant
 
 METADATA = {
     "key1": "foo",
@@ -57,19 +57,6 @@ TEST_EVENT = {
     },
     "metadata": METADATA
 }
-
-
-def create_grant(host_url):
-    return requests.post(
-        url=f"{host_url}/v3/grants",
-        headers=HEADERS,
-        json={
-            "provider": "virtual-calendar",
-            "settings": {
-                "email": "test-virtual-calendars@nylas.com"
-            }
-        },
-    ).json()
 
 
 def delete_grant(grant_id):
@@ -182,7 +169,7 @@ if __name__ == '__main__':
                 'Accept': 'application/json',
                 'X-Nylas-Provider-Gma': 'virtual-calendar'
             }
-            res = create_grant(V3_STAGING_DOMAIN)
+            res = create_grant(V3_STAGING_DOMAIN, HEADERS)
             print(f"created grant: {res}")
             grant_id = res['data']['id']
             url = f"{V3_STAGING_DOMAIN}/v3/grants/{grant_id}"
@@ -193,7 +180,7 @@ if __name__ == '__main__':
                 'Accept': 'application/json',
                 'X-Nylas-Provider-Gma': 'virtual-calendar'
             }
-            res = create_grant(V3_PROD_DOMAIN)
+            res = create_grant(V3_PROD_DOMAIN, HEADERS)
             print(f"created grant: {res}")
             grant_id = res['data']['id']
             url = f"{V3_PROD_DOMAIN}/v3/grants/{grant_id}"
