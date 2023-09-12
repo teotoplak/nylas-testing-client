@@ -307,9 +307,10 @@ if __name__ == '__main__':
         if event_id:
             res = delete_event(url, event_id)
             print(f"deleted event: {res}")
-        if calendar_id:
-            res = delete_calendar(url, calendar_id)
-            print(f"deleted calendar: {res}")
+        # WE CANNOT DELETE PRIMARY CALENDAR ANYMORE; WE ARE JUST LEAVING THIS DUMMY DATA IN THE SYSTEM.
+        # if calendar_id:
+        #     res = delete_calendar(url, calendar_id)
+        #     print(f"deleted calendar: {res}")
         if e2e and grant_id:
             res = delete_grant(grant_id)
             print(f"deleted grant: {res}")
