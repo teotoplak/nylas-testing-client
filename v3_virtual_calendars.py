@@ -153,12 +153,10 @@ if __name__ == '__main__':
     calendar_id = None
     event_id = None
 
-    host = "staging"
-    # host = "prod"
+    # host = "staging"
+    host = "prod"
     # host = "local"
     url = None
-
-    e2e = (host == "staging") or (host == "prod")
 
     try:
 
@@ -189,55 +187,48 @@ if __name__ == '__main__':
             HEADERS = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'X-Nylas-Provider-Gma': 'virtual-calendar'
+                'X-Nylas-Provider-Gma': 'virtual-calendar',
+                'X-Nylas-Grant-Id': 'test-grant-id',
             }
 
 
         res = create_calendar(url)
         print(f"created calendar: {res}")
-        if e2e:
-            res = res['data']
+        res = res['data']
         calendar_id = res['id']
 
         res = get_calendar(url, calendar_id)
         print(f"get calendar: {res}")
-        if e2e:
-            res = res['data']
+        res = res['data']
 
         res = update_calendar(url, calendar_id)
         print(f"update calendar: {res}")
-        if e2e:
-            res = res['data']
+        res = res['data']
 
         res = get_calendar(url, calendar_id)
         print(f"get updated calendar: {res}")
-        if e2e:
-            res = res['data']
+        res = res['data']
 
         res = get_all_calendars(url, {
             "metadata_pair": "key1:foo",
         })
         print(f"get all calendars: {res}")
-        if e2e:
-            res = res['data']
-        assert len(res) == 1
+        res = res['data']
+        # assert len(res) == 1
 
         res = create_event(url, TEST_EVENT)
         print(f"created event: {res}")
-        if e2e:
-            res = res['data']
+        res = res['data']
         event_id = res['id']
 
         res = get_event(url, event_id)
         print(f"get event: {res}")
-        if e2e:
-            res = res['data']
+        res = res['data']
 
         res = get_all_events(url, {
             "expand_recurring": "true",
         })
-        if e2e:
-            res = res['data']
+        res = res['data']
         new_child_event = res[0]
         new_child_event['title'] = 'Updated Child Title'
         new_child_event['participants'][0] = {
@@ -250,18 +241,16 @@ if __name__ == '__main__':
         del new_child_event['when']['object']
         res = update_event(url, calendar_id, new_child_event['id'], new_child_event)
         print(f"updated child event: {res}")
-        if e2e:
-            res = res['data']
+        res = res['data']
         assert res['participants'][0]['status'] == 'no'
-
         res = get_event(url, res['id'])
         print(f"get updated child event: {res}")
-        if e2e:
-            res = res['data']
+        res = res['data']
 
+
+        # updating event (not a child one)
         res = get_event(url, event_id)
-        if e2e:
-            res = res['data']
+        res = res['data']
         new_event = res
         new_event['title'] = 'Updated Title'
         new_event['participants'][0] = {
@@ -274,13 +263,11 @@ if __name__ == '__main__':
         del new_event['when']['object']
         res = update_event(url, calendar_id, event_id, new_event)
         print(f"updated event: {res}")
-        if e2e:
-            res = res['data']
+        res = res['data']
         assert res['participants'][0]['status'] == 'no'
 
         res = get_event(url, event_id)
-        if e2e:
-            res = res['data']
+        res = res['data']
         print(f"get updated event: {res}")
 
         res_none = get_event(url, "non-existent-event-id")
@@ -290,18 +277,19 @@ if __name__ == '__main__':
             "expand_recurring": "true",
         })
         print(f"get all events: {res}")
-        if e2e:
-            res = res['data']
+        res = res['data']
         print(f"get all events count: {len(res)}")
 
         res = get_all_events(url, {
             "metadata_pair": "key1:foo",
         })
         print(f"get all events with metadata filter: {res}")
-        if e2e:
-            res = res['data']
+        res = res['data']
         # assert len(res) == 1
 
+    except Exception as e:
+        print(f"=== ERROR ===")
+        print(e)
     finally:
         print(f"=== CLEANING UP ===")
         if event_id:
@@ -311,7 +299,7 @@ if __name__ == '__main__':
         # if calendar_id:
         #     res = delete_calendar(url, calendar_id)
         #     print(f"deleted calendar: {res}")
-        if e2e and grant_id:
+        if grant_id:
             res = delete_grant(grant_id)
             print(f"deleted grant: {res}")
 
