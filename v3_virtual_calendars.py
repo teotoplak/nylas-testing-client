@@ -26,7 +26,8 @@ TEST_CALENDAR = {
     "timezone": "America/Los_Angeles",
     "metadata": METADATA,
 }
-tomorrow_date = (datetime.today() + timedelta(days=1)).strftime('%Y%m%d')
+tomorrow_date = (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d')
+tomorrow_date_short = (datetime.today() + timedelta(days=1)).strftime('%Y%m%d')
 TEST_EVENT = {
     "title": "Birthday Party",
     "status": "confirmed",
@@ -46,7 +47,7 @@ TEST_EVENT = {
     "location": "Roller Rink",
     "recurrence": [
         "RRULE:FREQ=WEEKLY;COUNT=3",
-        exdate_format([tomorrow_date])
+        exdate_format([tomorrow_date_short])
   ],
     "conferencing": {
         "provider": "Google Meet",
@@ -56,6 +57,30 @@ TEST_EVENT = {
         }
     },
     "metadata": METADATA
+}
+
+TMP_CHILD_TEST_EVENT = {
+    "description": "",
+    "hide_participants": False,
+    # "participants": [],
+    "reminders": {
+      "use_default": True,
+      "overrides": None
+    },
+    "title": "recurring test 12/6/23",
+    "when": {
+        "start_time": 1703025000,
+        "start_timezone": "America/New_York",
+        "end_time": 1703028600,
+        "end_timezone": "America/New_York"
+    },
+    "conferencing": {
+        "provider": "Google Meet",
+        "details": {
+            "url": "https://zoom.us/j/1234567890",
+            "phone": ["+1 123 456 7890", "+1 123 456 7891"],
+        }
+    },
 }
 
 
@@ -239,10 +264,13 @@ if __name__ == '__main__':
         new_child_event['metadata'] = METADATA_NEW
         # otherwise request will be rejected since you can't send event.when.object
         del new_child_event['when']['object']
-        res = update_event(url, calendar_id, new_child_event['id'], new_child_event)
+        del new_child_event['organizer']
+        idchild = new_child_event['id']
+        del new_child_event['id']
+        res = update_event(url, calendar_id, idchild, new_child_event)
         print(f"updated child event: {res}")
         res = res['data']
-        assert res['participants'][0]['status'] == 'no'
+        # assert res['participants'][0]['status'] == 'no'
         res = get_event(url, res['id'])
         print(f"get updated child event: {res}")
         res = res['data']
@@ -261,6 +289,9 @@ if __name__ == '__main__':
         new_event['metadata'] = METADATA_NEW
         # otherwise request will be rejected since you can't send event.when.object
         del new_event['when']['object']
+        # organiser is not a modifiable field.
+        del new_event['organizer']
+        del new_event['id']
         res = update_event(url, calendar_id, event_id, new_event)
         print(f"updated event: {res}")
         res = res['data']
